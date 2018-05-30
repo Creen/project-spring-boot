@@ -1,4 +1,4 @@
-package com.example.twitter;
+package com.example.twitter.controller;
 
 import com.example.twitter.domain.Message;
 import com.example.twitter.repository.MessageRepository;
@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Map;
 
 @Controller
-public class GreetingController {
-
+public class MainController {
     @Autowired
     private MessageRepository messageRepository;
 
@@ -24,28 +23,35 @@ public class GreetingController {
     @GetMapping("/main")
     public String main(Map<String, Object> model){
         Iterable<Message> messages = messageRepository.findAll();
+
         model.put("messages", messages);
+
         return "main";
     }
 
     @PostMapping("/main")
     public String add(@RequestParam String text, @RequestParam String tag, Map<String, Object> model){
         Message message = new Message(text, tag);
+
         messageRepository.save(message);
 
         Iterable<Message> messages = messageRepository.findAll();
+
         model.put("messages", messages);
+
         return "main";
     }
 
     @PostMapping("filter")
     public String filer(@RequestParam String filter, Map<String, Object> model){
         Iterable<Message> messages;
+
         if(filter != null && !filter.isEmpty()) {
             messages = messageRepository.findByTag(filter);
         } else {
             messages = messageRepository.findAll();
         }
+
         model.put("messages", messages);
 
         return "main";
